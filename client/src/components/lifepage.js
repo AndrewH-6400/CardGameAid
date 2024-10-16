@@ -21,9 +21,9 @@ const LifePage = () => {
             <div>Put the icon that will drop down to the get you to other pages or to edit this one here</div>
             <div id="Scores" class="grid grid-cols-2 justify-items-stretch gap-1 size-full bg-slate-500">
                 <Score />
-                <Score score={"22"}/>
-                <Score score={"39"}/>
-                <Score score={"40"}/>
+                <Score />
+                <Score />
+                <Score />
             </div>
         </div>
     )

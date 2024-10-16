@@ -1,5 +1,6 @@
 import "../output.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
 
 const Score = ({score}) => {
 
@@ -13,16 +14,58 @@ const Score = ({score}) => {
     //     }
     // }, []);
     const [lifeScore, setLifeScore] = useState(40);
+    const [counter, setCounter] = useState(0);
+    const timerRef = useRef();
+    const isLongPress = useRef();
+
+    const startPressTimer = () => {
+        isLongPress.current = false;
+        timerRef.current = setTimeout(() => {
+            isLongPress.current = true;
+            console.log('longpress')
+        },500)
+    }
+
+    useEffect(() => {
+        if (isLongPress.current) {
+            setCounter(counter+1)
+        }
+    }, [isLongPress])
 
     const handleLife = (val) => {
-        setLifeScore(lifeScore+val);
+        console.log("mouse up")
+        clearTimeout(timerRef.current)
+        if (isLongPress.current) {
+            setLifeScore(lifeScore+(val*10))
+        } else{
+            setLifeScore(lifeScore+(val))
+        }
+        
     };
 
+    const checkLong = () => {
+        console.log("Mouse down")
+        startPressTimer();
+    };
+
+    //here as leftover from testing for now, if this code becomes a custom hook this may be needed
+    // const checkClick = () => {
+    //     console.log("click")
+    //     if ( isLongPress.current ) {
+    //         console.log('Is long press - not continuing.');
+    //         return;
+    //       }
+    // }
+
+
     return(
-        <div id="lifescore1" class="bg-white flex flex-row">
-            <div class="grow" onClick={() => handleLife(-1)}></div>
-            <p class="self-center text-9xl">{lifeScore}</p>
-            <div class="grow" onClick={() => handleLife(1)}></div>
+        
+        <div id="lifescore" class="bg-white flex flex-row relative">
+            {/* <div class="grow bg-slate-500 opacity-0 z-10 active:opacity-50" onClick={() => handleLife(-1)}></div>
+            <div class="grow bg-slate-500 opacity-0 z-10 active:opacity-50" onClick={() => handleLife(1)}></div> */}
+            <div class="grow bg-slate-500 opacity-0 z-10 active:opacity-50" onMouseDown={checkLong} onMouseUp={() => handleLife(-1)} ></div>
+            <div class="grow bg-slate-500 opacity-0 z-10 active:opacity-50" onMouseDown={checkLong} onMouseUp={() => handleLife(1)} > </div>
+            <div class="text-center select-none text-9xl absolute right-0 left-0 top-0 bottom-0 m-auto w-40 h-40">{lifeScore}</div>
         </div>
     )
 };
